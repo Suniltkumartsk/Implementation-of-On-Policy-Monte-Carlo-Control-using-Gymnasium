@@ -33,6 +33,7 @@ pip install gymnasium numpy matplotlib
 
 
 
+FrozenLake-v1 is a grid-based reinforcement learning environment provided by Gymnasium. The environment contains frozen tiles, holes, a starting state, and a goal state. The agent starts from the starting position and must learn to reach the goal while avoiding the holes. At each state, the agent can choose one of four actions: Left, Down, Right, or Up. The agent receives a reward when it successfully reaches the goal. The environment is used to train the agent through repeated episodes and learn the best action for each state using Monte Carlo Control.
 
 
 
@@ -100,7 +101,25 @@ $$
 
 ## Algorithm
 
+1.Initialize the FrozenLake environment and obtain the number of states and actions.
 
+2.Initialize the Q-table with zeros.
+
+3.Set the hyperparameters: number of episodes, learning rate α, discount factor γ, and epsilon values.
+
+4.Select actions using the epsilon-greedy policy.
+
+5.Generate a complete episode until the agent reaches the goal, falls into a hole, or reaches the maximum number of steps.
+
+6.Calculate the return Gt by traversing the episode backward.
+
+7.Update the Q-value using: Q(s,a) ← Q(s,a) + α[Gt − Q(s,a)]
+
+8.Gradually reduce epsilon to shift from exploration to exploitation.
+
+9.Extract the greedy policy using the maximum Q-value for each state.
+
+10.Display the Q-table, state-value function, learned policy, average reward, and learning curve.
 
 ## Python Program
 
@@ -109,7 +128,23 @@ $$
 
 
 ```python
-# Write your code here
+def epsilon_greedy_action(state, epsilon):
+    # Exploration
+    if np.random.rand() < epsilon:
+        return np.random.randint(n_actions)
+    # Exploitation
+    return np.argmax(Q[state])
+
+…    # Decay epsilon
+    epsilon = max(epsilon_min, epsilon * epsilon_decay)
+
+    # Display progress
+    if (episode + 1) % 2000 == 0:
+        print(
+            "Episode:", episode + 1,
+            "Average Reward:",
+            np.mean(episode_rewards[-1000:])
+        )
 
 
 
@@ -119,45 +154,33 @@ $$
 
 ## Output
 
-```text
-Final Q-table:
+### Number of Episodes : 20000
+
+<img width="938" height="589" alt="image" src="https://github.com/user-attachments/assets/616db978-c2a0-4e7f-85cb-90bce402b6e2" />
+
+<img width="836" height="482" alt="image" src="https://github.com/user-attachments/assets/2d94e9e2-5276-4aae-b2b5-a03ab009cf2e" />
 
 
 
-Estimated State-Value Function:
+### Number of Episodes : 2000
+<img width="507" height="571" alt="image" src="https://github.com/user-attachments/assets/e296be20-a569-4986-acf3-f7b762acf1fe" />
 
 
-
-
-
-
-
-Learned Policy:
-
-
-
-
-
-Average reward over last 1000 episodes: 
-```
-
+<img width="869" height="471" alt="image" src="https://github.com/user-attachments/assets/76cb7dc9-0ab5-4da9-a71e-11516237cfdb" />
 
 ---
 
 ## Result
-```text
 
 
+The On-Policy Monte Carlo Control algorithm was successfully implemented using the Gymnasium FrozenLake-v1 environment.The agent learned the action-value function Q(s,a) from complete episodes and obtained an improved policy using epsilon-greedy action selection.
 
-```
----
+
 
 ## Inference
-```text
 
+The experiment demonstrates how an agent can learn the best actions by interacting with the environment. Monte Carlo Control updates the Q-values based on the rewards obtained after completing each episode. The epsilon-greedy method helps the agent explore new actions while also selecting actions that have already shown good results. After many episodes, the agent learns an effective policy to reach the goal and avoid dangerous states.
 
-
-```
 
 
 
